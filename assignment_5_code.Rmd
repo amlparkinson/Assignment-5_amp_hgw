@@ -133,9 +133,38 @@ salamander_chi_counts <- mack_creek_verts %>%
 ```
 i cannot get rid of the unittype/channel type column for the chi squared subdata!!
 
-### Results D: 
+### Results D: Is there a significant difference in mean weights for Pacific giant salamanders observed in clear cut vs  old growth forests in 2017
 
-### Results E:
+```{r}
+# sub data: only include salamander observations in 2017 and remove unneccessary columns
+salamader_weights <- mack_creek_verts %>% 
+  filter (species == "DITE") %>% 
+  filter (year == "2017") %>% 
+  select (section, species, weight)
+
+# look at data spread ------------------------------------------------------------
+
+#histogram --> observations are very skewed towards smaller weights
+ggplot (salamader_weights, aes (x=weight)) +
+  geom_histogram() +
+  facet_wrap(~section)
+
+# qqplot
+ggplot (salamader_weights, aes (sample=weight)) +
+  geom_qq() +
+  facet_wrap(~section)
+
+#conclusion: most of the points in both qq plots follow a straight line, even though there is some deviation in the qqplot and the histograms are skewed, we can assume the means follow a normal sampling distribution because of the central limit theorem so we can use a parametrric test to compare means
+
+# statistical significance test ----------------------------------------------------
+
+weigths_ttest <- t.test(weight~section, data=salamader_weights)
+
+weigths_ttest
+```
+double check wording of the data spread conclusion to labs we've done with allison
+
+### Results E: Is there a significant difference between mean Pacific giant salamander weights in the 3 channel types: pools, cascades and side-channels of Mack Creek in 2017
 
 ### Summary
 
