@@ -1,0 +1,104 @@
+---
+title: "Pacific giant salamanders (Dicamptodon tenebrosus) in Mack Creek"
+author: "Anne-Marie Parkinson and Hannah Garcia-something with a W"
+date: "November 24, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# load packages ------------------------------------------------------------------
+
+library (tidyverse)
+library (janitor)
+library (dplyr)
+library (kableExtra)
+
+# add data -------------------------------------------------------------------------
+
+mack_creek_verts <- read_csv("mack_creek_vertebrates.csv") %>% 
+  clean_names()
+
+```
+
+
+### Introduction
+
+url for picture: http://www.californiaherps.com/salamanders/pages/d.tenebrosus.html
+photo credit: Gary Nafis
+### Data and Methods
+
+### Results A: Annual salamander counts in old growth and clear cut sections of Mack Creek
+
+```{r}
+# subdata: remove unneccessary columns and keep only salamander observations
+salamander_counts_data <- mack_creek_verts %>% 
+  filter (species == "DITE") %>% 
+  select (year, section, species)
+
+# count number of salamanders in each section (CC vs OG) for every year
+salamander_counts <- salamander_counts_data %>% 
+  group_by(year, section) %>% 
+  count(species)
+
+# plot - not the right graph type
+ggplot(salamander_counts, aes (x=year, y=n)) +
+  geom_col(aes(fill=section))
+
+
+```
+
+
+### Results B: Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth and clear cut sections of Mack Creek. 
+
+```{r}
+#subdata: only include 2017 and salamader observations, exclude isolated pools from data
+salamander_channel_2017 <- mack_creek_verts %>% 
+  filter (year == "2017") %>% 
+  filter (species == "DITE") %>% 
+  filter (unittype != "IP") %>% 
+  mutate(channel_type= case_when(
+    unittype %in% "C" ~ "Cascade",
+    unittype %in% "P" ~"Pool",
+    unittype %in% "SC" ~ "Side Channel"
+  )) %>% 
+  select (species, channel_type, section)
+
+# counts
+salamander_channel_counts_2017 <- salamander_channel_2017 %>% 
+  group_by(channel_type, section) %>% 
+  count(species) %>% 
+  select (channel_type, section, n)
+
+# create contigency table 
+salamander_table_2017 <- salamander_channel_counts_2017 %>% 
+  pivot_wider(names_from = section, values_from = n) 
+  
+
+# add proportions to contigency table
+salamander_table_counts_proportions_2017 <- salamander_table_2017 %>% 
+  adorn_percentages(denominator = "row") %>% 
+  adorn_pct_formatting(digits=1) %>% 
+  adorn_ns(position = "front")
+
+#  markdown ready table
+salamander_table_counts_proportions_2017 %>% 
+  kable (col.names = c("Channel Type", "Clear Cut Forest", "Old-Growth Forest")) %>% 
+  kable_styling()
+
+  
+```
+not sure why getting that error message. its not affecting the table counts/proportions (ex/when change position from front to rear dont get the error message)
+
+### Results c: 
+
+### Results D: 
+
+### Results E:
+
+### Summary
+
+### References 
