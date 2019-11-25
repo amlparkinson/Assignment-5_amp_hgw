@@ -1,12 +1,15 @@
 ---
-title: "Pacific giant salamanders (Dicamptodon tenebrosus) in Mack Creek"
-author: "Anne-Marie Parkinson and Hannah Garcia-something with a W"
+title: "Pacific giant salamanders in Mack Creek"
+author: "Anne-Marie Parkinson and Hannah Garcia-Wickstrum"
 date: "November 24, 2019"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE)
 ```
 
 ```{r}
@@ -31,7 +34,9 @@ url for picture: http://www.californiaherps.com/salamanders/pages/d.tenebrosus.h
 photo credit: Gary Nafis
 ### Data and Methods
 
-### Results A: Annual salamander counts in old growth and clear cut sections of Mack Creek
+### Results
+
+#### Results A: Annual salamander counts in old growth and clear cut sections of Mack Creek
 
 ```{r}
 # subdata: remove unneccessary columns and keep only salamander observations
@@ -45,12 +50,21 @@ salamander_counts <- salamander_counts_data %>%
   count(species)
 
 # plot - not the right graph type
-ggplot(salamander_counts, aes (x=year, y=n)) +
-  geom_col(aes(fill=section))
+# ggplot(salamander_counts, aes (x=year, y=n)) +
+#   geom_col(aes(fill=section)) 
 
-
+ggplot(salamander_counts, aes(fill = section, x = year, y = n)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  scale_fill_manual("legend", values = c("CC" = "orange", "OG" = "seagreen")) +
+  scale_x_continuous(lim = c(1993, 2017),
+                     expand = c(0, 0),
+                     breaks = seq(1993, 2017, by = 2)) +
+  labs(x = "year", y = "salamander counts") +
+  ggtitle("Salamander counts in old growth and clear cut sections")
+  
+# what do you think about the grouped bar? and the colors? do you think we should have the legend list out the full name instead of the acronym? or we can just clearly state in title and figure caption?
 ```
-
+***Figure #.** Salamander counts in clear cut (orange) and old growth (green) sections of Mack Creek. From 1993 to 2013, there were almost always more salamanders counted in old growth sections. From 2013 to 2017, salamander counts were higher in clear cut sections. Data: Stanley Gregory, Andrews Forest LTER Sites.* **Needs editing and better description.**
 
 ### Results B: Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth and clear cut sections of Mack Creek. 
 
@@ -93,7 +107,7 @@ salamander_table_counts_proportions_2017 %>%
 ```
 not sure why getting that error message. its not affecting the table counts/proportions (ex/when change position from front to rear dont get the error message)
 
-### Results c: 
+### Results C: 
 
 ### Results D: 
 
@@ -102,3 +116,5 @@ not sure why getting that error message. its not affecting the table counts/prop
 ### Summary
 
 ### References 
+
+**Gregory S. V. 2016**. Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to present. Environmental Data Initiative. https://doi.org/10.6073/pasta/5de64af9c11579266ef20da2ff32f702. Dataset accessed 11/25/2019.
