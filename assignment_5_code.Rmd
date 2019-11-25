@@ -107,7 +107,31 @@ salamander_table_counts_proportions_2017 %>%
 ```
 not sure why getting that error message. its not affecting the table counts/proportions (ex/when change position from front to rear dont get the error message)
 
-### Results C: 
+### Results C: Chi-Square test to determine if there is a significant difference in where in the channel Pacific giant salamanders are located (pool, cascade or side channel) between the two old growth and clear cut forests. 
+
+```{r}
+
+# subdata: remove qualitative column (channel type) and only include counts (not proportions)
+salamander_chi_counts <- salamander_table_2017 %>% 
+  dplyr::select(-channel_type) 
+
+salamander_chi_counts <- mack_creek_verts %>% 
+  filter (year == "2017") %>% 
+  filter (species == "DITE") %>% 
+  filter (unittype != "IP") %>% 
+  select (species, unittype, section) %>% 
+  group_by(unittype, section) %>% 
+  count(species) %>% 
+  select (unittype, section, n) %>% 
+  pivot_wider(names_from = section, values_from = n) %>% 
+  dplyr::select(-unittype) 
+
+# chi-sqaure test
+#chisq.test(salamander_chi_counts)
+
+
+```
+i cannot get rid of the unittype/channel type column for the chi squared subdata!!
 
 ### Results D: 
 
