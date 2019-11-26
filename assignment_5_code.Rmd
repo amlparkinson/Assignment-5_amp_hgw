@@ -61,8 +61,17 @@ ggplot(salamander_counts, aes(fill = section, x = year, y = n)) +
                      breaks = seq(1993, 2017, by = 2)) +
   labs(x = "year", y = "salamander counts") +
   ggtitle("Salamander counts in old growth and clear cut sections")
+
+# ggplot(salamander_counts, aes(x = year, y = n)) +
+#   geom_line(aes(color = section), size = 1) +
+#   geom_point(aes(color = section), size = 2) +
+#   scale_x_continuous(lim = c(1993, 2017),
+#                      expand = c(0, 0),
+#                      breaks = seq(1993, 2017, by = 2)) +
+#   theme_bw()  
+
   
-# what do you think about the grouped bar? and the colors? do you think we should have the legend list out the full name instead of the acronym? or we can just clearly state in title and figure caption?
+# what do you think about the grouped bar? and the colors? do you think we should have the legend list out the full name instead of the acronym? or we can just clearly state in title and figure caption? I don't really like the line graph..What do you think?
 ```
 ***Figure #.** Salamander counts in clear cut (orange) and old growth (green) sections of Mack Creek. From 1993 to 2013, there were almost always more salamanders counted in old growth sections. From 2013 to 2017, salamander counts were higher in clear cut sections. Data: Stanley Gregory, Andrews Forest LTER Sites.* **Needs editing and better description.**
 
@@ -154,7 +163,7 @@ ggplot (salamader_weights, aes (sample=weight)) +
   geom_qq() +
   facet_wrap(~section)
 
-#conclusion: most of the points in both qq plots follow a straight line, even though there is some deviation in the qqplot and the histograms are skewed, we can assume the means follow a normal sampling distribution because of the central limit theorem so we can use a parametrric test to compare means
+#conclusion: most of the points in both qq plots follow a straight line, even though there is some deviation in the qqplot and the histograms are skewed, we can assume the means follow a normal sampling distribution because of the central limit theorem so we can use a parametrric test to compare means -- Can you explain how those are normally distributed? They don't look like it at all... (HGW)
 
 # statistical significance test ----------------------------------------------------
 
@@ -165,6 +174,29 @@ weigths_ttest
 double check wording of the data spread conclusion to labs we've done with allison
 
 ### Results E: Is there a significant difference between mean Pacific giant salamander weights in the 3 channel types: pools, cascades and side-channels of Mack Creek in 2017
+
+```{r}
+# Visually compare the salamander weights between the three channel classifications: SC (side channel), P (pool), C (cascade). unittype Beeswarm
+
+channel_weights <- mack_creek_verts %>%
+  filter(unittype %in% c("SC", "P", "C")) %>%
+  filter(species == "DITE")
+
+ggplot() +
+  ggbeeswarm::geom_beeswarm(data = channel_weights,
+                            aes(x = unittype,
+                                y = weight,
+                                color = unittype),
+                            na.rm = TRUE,
+                            size = 2,
+                            alpha = 0.6,
+                            pch = 16) +
+  facet_wrap(~unittype, scales = "free")
+
+# this is turning out really weird. I'll work on it more tomorrow. (HGW)
+  
+```
+
 
 ### Summary
 
