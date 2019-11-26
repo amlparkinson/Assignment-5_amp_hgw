@@ -31,15 +31,23 @@ mack_creek_verts <- read_csv("mack_creek_vertebrates.csv") %>%
 
 
 ### Introduction
-Hannah
+Beginning in 1993, researchers from the [Andrews Experimental Forest Long-Term Ecological Research (LTER)](https://andrewsforest.oregonstate.edu) have been monitoring populations of Pacific Giant Salamanders, *Dicamptodon tenebrosus*, specifically in Mack Creek (Gregory 2016). The Experimental Forest is part of the Willamette National Forest in western Oregon and managed by the U.S. Forest Service and Oregon State University (Figure 2.). Researchers are interested in how disturbances in forests effect biota. The data was collected from two sections of of Mack Creek - a clear cut section and an old-growth section. Here, we will use the data collected by the Andrews Experimental Forest Team to compare the differences in size and weight distributions of salamanders from clear cut and old growth sections. 
 
-url for picture: http://www.californiaherps.com/salamanders/pages/d.tenebrosus.html
-photo credit: Gary Nafis
+![](Dicamptodon tenebrosus.jpg) 
+***Figure 1.** A Pacific Giant Salamander (Dicamptodon tenebrosus) laying on a down log. Photo credit: Gary Nafis, [www.californiaherps.com](http://www.californiaherps.com/salamanders/pages/d.tenebrosus.html).*
+
+![](map3.jpg)
+***Figure 2.** Map of HJ Andrews Experimental Forest LTER in Oregon. Andrews Experimental Forest is managed by the U.S. Forest Service and Oregon State University.* 
+
 ### Data and Methods
+
 Anne-Marie
+
 ### Results
 
 #### Results A: Annual salamander counts in old growth and clear cut sections of Mack Creek
+
+Salamander counts in old growth and clear cut sections were compared between 1993 and 2017. Overall, salamander counts in both sections followed similar patterns; when counts in old growth sections were high (>200), counts in clear cut sections were also high. In 1994, 2011, and 2015-2017, salamander counts were higher in clear cut sections than old growth sections. In total, old growth sections had higher populations of salamanders (n = 5,951) compared to clear cut sections (n = 5,051) over the 17 year period.  
 
 ```{r}
 # subdata: remove unneccessary columns and keep only salamander observations
@@ -50,33 +58,41 @@ salamander_counts_data <- mack_creek_verts %>%
 # count number of salamanders in each section (CC vs OG) for every year
 salamander_counts <- salamander_counts_data %>% 
   group_by(year, section) %>% 
-  count(species)
+  count(species) %>%
+  mutate(section_long = case_when(
+    section %in% "CC" ~ "Clear Cut",
+    section %in% "OG" ~ "Old Growth"
+  ))
 
-# plot - not the right graph type
-# ggplot(salamander_counts, aes (x=year, y=n)) +
-#   geom_col(aes(fill=section)) 
+salamander_counts_totals <- salamander_counts %>%
+  group_by(section) %>%
+  summarize(total_pop = sum(n))
 
-ggplot(salamander_counts, aes(fill = section, x = year, y = n)) +
-  geom_bar(position = "dodge", stat = "identity") +
-  scale_fill_manual("legend", values = c("CC" = "orange", "OG" = "seagreen")) +
-  scale_x_continuous(lim = c(1993, 2017),
-                     expand = c(0, 0),
-                     breaks = seq(1993, 2017, by = 2)) +
-  labs(x = "year", y = "salamander counts") +
-  ggtitle("Salamander counts in old growth and clear cut sections")
-
-# ggplot(salamander_counts, aes(x = year, y = n)) +
-#   geom_line(aes(color = section), size = 1) +
-#   geom_point(aes(color = section), size = 2) +
+# ggplot(salamander_counts, aes(fill = section, x = year, y = n)) +
+#   geom_bar(position = "dodge", stat = "identity") +
+#   scale_fill_manual("legend", values = c("CC" = "orange", "OG" = "seagreen")) +
 #   scale_x_continuous(lim = c(1993, 2017),
 #                      expand = c(0, 0),
 #                      breaks = seq(1993, 2017, by = 2)) +
-#   theme_bw()  
+#   labs(x = "year", y = "salamander counts") +
+#   ggtitle("Salamander counts in old growth and clear cut sections")
 
-  
-# what do you think about the grouped bar? and the colors? do you think we should have the legend list out the full name instead of the acronym? or we can just clearly state in title and figure caption? I don't really like the line graph..What do you think?
+ggplot(salamander_counts, aes(x = year, y = n)) +
+  geom_line(aes(color = section_long), size = 1) +
+  geom_point(aes(color = section_long), size = 2) +
+  scale_x_continuous(lim = c(1993, 2017),
+                     expand = c(0, 0),
+                     breaks = seq(1993, 2017, by = 2)) +
+  scale_color_manual(values = c("orange", "seagreen")) +
+  theme_bw() +
+  labs(x = "Year",
+       y = "Salamander count",
+       title = "Salamander Count in Clear Cut and Old Growth Sections")
+
+# I can't figure out how to change the title of the legend!?!?
+
 ```
-***Figure #.** Salamander counts in clear cut (orange) and old growth (green) sections of Mack Creek. From 1993 to 2013, there were almost always more salamanders counted in old growth sections. From 2013 to 2017, salamander counts were higher in clear cut sections. Data: Stanley Gregory, Andrews Forest LTER Sites.* **Needs editing and better description.**
+***Figure 3.** Salamander counts in clear cut (orange) and old growth (green) sections of Mack Creek. Old growth sections are responsible for higher counts of salamanders for 80% of the time between 1993 and 2017. The populations in both sections display similar patterns of highs and lows. Data: Stanley Gregory, Andrews Forest LTER Sites.* 
 
 ### Results B: Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth and clear cut sections of Mack Creek. 
 
