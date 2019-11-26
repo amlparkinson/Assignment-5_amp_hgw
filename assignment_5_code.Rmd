@@ -179,21 +179,58 @@ double check wording of the data spread conclusion to labs we've done with allis
 # Visually compare the salamander weights between the three channel classifications: SC (side channel), P (pool), C (cascade). unittype Beeswarm
 
 channel_weights <- mack_creek_verts %>%
-  filter(unittype %in% c("SC", "P", "C")) %>%
-  filter(species == "DITE")
+  filter(species == "DITE") %>%
+  filter(unittype %in% c("C", "P", "SC")) %>%
+  mutate(channel_type = case_when(
+    unittype %in% "C" ~ "Cascade",
+    unittype %in% "P" ~"Pool",
+    unittype %in% "SC" ~ "Side Channel"))
 
-ggplot() +
-  ggbeeswarm::geom_beeswarm(data = channel_weights,
-                            aes(x = unittype,
-                                y = weight,
-                                color = unittype),
-                            na.rm = TRUE,
-                            size = 2,
-                            alpha = 0.6,
-                            pch = 16) +
-  facet_wrap(~unittype, scales = "free")
+channel_weights_mean <- channel_weights %>%
+  select(unittype, weight, channel_type) %>%
+  group_by(channel_type) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE),
+            sd_weight = sd(weight, na.rm = TRUE),
+            sample_size = n(),
+            se_weight = sd(weight) / sqrt(n()),
+            var_weight = var(weight))
 
-# this is turning out really weird. I'll work on it more tomorrow. (HGW)
+# having issues with these damn NA values!!! >:(
+  
+
+# ggplot() +
+#   ggbeeswarm::geom_beeswarm(data = channel_weights,
+#                             aes(x = channel_type,
+#                                 y = weight,
+#                                 color = unittype),
+#                             na.rm = TRUE,
+#                             size = 2,
+#                             alpha = 0.6,
+#                             pch = 16)
+# #   facet_wrap(~unittype, scales = "free")
+
+ggplot(data = channel_weights, 
+       aes(x = channel_type,
+           y = weight)) +
+  geom_jitter(aes(color = channel_type),
+              alpha = 0.6,
+              show.legend = FALSE) +
+  scale_y_continuous(lim = c(0, 140),
+                     expand = c(0, 0),
+                     breaks = seq(0, 135, by = 15)) +
+  theme_bw() +
+  labs(x = "channel type", y = "weight (grams)") +
+  ggtitle("Weights of Salamanders in Different Channel Types") +
+  geom_errorbar(data = channel_weights_mean,
+                aes(x = channel_type,
+                    ymin = mean_weight - sd_weight,
+                    ymax = mean_weight + sd_weight),
+                    inherit.aes = FALSE,
+                color = "black",
+                width = 0.1)
+  
+
+# My graphs keep turning out really weird... I'm not sure what else there is to do. 
   
 ```
 
