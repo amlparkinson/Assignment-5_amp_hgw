@@ -31,11 +31,12 @@ mack_creek_verts <- read_csv("mack_creek_vertebrates.csv") %>%
 
 
 ### Introduction
+Hannah
 
 url for picture: http://www.californiaherps.com/salamanders/pages/d.tenebrosus.html
 photo credit: Gary Nafis
 ### Data and Methods
-
+Anne-Marie
 ### Results
 
 #### Results A: Annual salamander counts in old growth and clear cut sections of Mack Creek
@@ -195,46 +196,38 @@ channel_weights_mean <- channel_weights %>%
   summarize(mean_weight = mean(weight, na.rm = TRUE),
             sd_weight = sd(weight, na.rm = TRUE),
             sample_size = n(),
-            se_weight = sd(weight) / sqrt(n()), na.rm = TRUE,
-            var_weight = var(weight), na.rm = TRUE)
+            se_weight = sd((weight) / sqrt(n()), na.rm = TRUE),
+            var_weight = var(weight, na.rm = TRUE))
 
 # having issues with these damn NA values!!! >:(
   
 
-# ggplot() +
-#   ggbeeswarm::geom_beeswarm(data = channel_weights,
-#                             aes(x = channel_type,
-#                                 y = weight,
-#                                 color = unittype),
-#                             na.rm = TRUE,
-#                             size = 2,
-#                             alpha = 0.6,
-#                             pch = 16)
-# #   facet_wrap(~unittype, scales = "free")
-
-ggplot(data = channel_weights,
-       aes(x = channel_type,
-           y = weight)) +
-  geom_jitter(aes(color = channel_type),
-              alpha = 0.6,
-              show.legend = FALSE) +
-  scale_y_continuous(lim = c(0, 90),
-                     expand = c(0, 0),
-                     breaks = seq(0, 90, by = 15)) +
-  theme_bw() +
-  labs(x = "channel type", y = "weight (grams)") +
-  ggtitle("Weights of Salamanders in Different Channel Types")
-
-  # geom_errorbar(data = channel_weights_mean,
-  #               aes(x = channel_type,
-  #                   ymin = mean_weight - sd_weight,
-  #                   ymax = mean_weight + sd_weight), 
-                # color = "black",
-                # width = 0.1)
-                # 
-
-# My graphs keep turning out really weird... I'm not sure what else there is to do. Now I'm getting errors when trying to do an errorbar. UGH
+ggplot() +
+  ggbeeswarm::geom_beeswarm(data = channel_weights,
+                            aes(x = channel_type,
+                                y = weight,
+                                color = unittype),
+                            na.rm = TRUE,
+                            size = 2,
+                            alpha = 0.6,
+                            pch = 16,
+                            show.legend = FALSE) +
+  geom_errorbar(data = channel_weights_mean,
+                aes(x = channel_type,
+                    ymin = mean_weight - sd_weight,
+                    ymax = mean_weight + sd_weight),
+                color = "black",
+                width = 0.1) +
+  geom_point(data = channel_weights_mean,
+             aes(x = channel_type, y = mean_weight),
+             color = "black",
+             size = 4) +
+  labs(x = "Channel Type",
+       y = "weight (grams)") +
+  ggtitle("2017 Salamander Weight in Different Channels")
   
+              
+# Is it ok to have negative error bar??
 ```
 
 ```{r}
@@ -242,6 +235,8 @@ ggplot(data = channel_weights,
 
 salamander_aov <- aov(weight ~ channel_type, data = channel_weights)
 summary(salamander_aov)
+
+# Descrube any concerns you have about comparing means across the groups... 
 ```
 
 
