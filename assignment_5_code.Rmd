@@ -1,5 +1,5 @@
 ---
-title: "Pacific giant salamanders in Mack Creek"
+title: "Pacific Giant Salamanders in Mack Creek"
 author: "Anne-Marie Parkinson and Hannah Garcia-Wickstrum"
 date: "November 24, 2019"
 output: html_document
@@ -34,10 +34,12 @@ mack_creek_verts <- read_csv("mack_creek_vertebrates.csv") %>%
 Beginning in 1993, researchers from the [Andrews Experimental Forest Long-Term Ecological Research (LTER)](https://andrewsforest.oregonstate.edu) have been monitoring populations of Pacific Giant Salamanders, *Dicamptodon tenebrosus*, specifically in Mack Creek (Gregory 2016). The Experimental Forest is part of the Willamette National Forest in western Oregon and managed by the U.S. Forest Service and Oregon State University (Figure 2.). Researchers are interested in how disturbances in forests effect biota. The data was collected from two sections of of Mack Creek - a clear cut section and an old-growth section. Here, we will use the data collected by the Andrews Experimental Forest Team to compare the differences in size and weight distributions of salamanders from clear cut and old growth sections. 
 
 ![](Dicamptodon tenebrosus.jpg) 
+
 ***Figure 1.** A Pacific Giant Salamander (Dicamptodon tenebrosus) laying on a down log. Photo credit: Gary Nafis, [www.californiaherps.com](http://www.californiaherps.com/salamanders/pages/d.tenebrosus.html).*
 
 ![](map3.jpg)
-***Figure 2.** Map of HJ Andrews Experimental Forest LTER in Oregon. Andrews Experimental Forest is managed by the U.S. Forest Service and Oregon State University.* 
+
+***Figure 2.** Map of HJ Andrews Experimental Forest LTER in Oregon. Andrews Experimental Forest is managed by the U.S. Forest Service and Oregon State University. Map courtesty of: [HJ Andrews Experimental Forest](https://andrewsforest.oregonstate.edu/sites/default/files/lter/data/map/2011base.jpg).* 
 
 ### Data and Methods
 
@@ -47,7 +49,7 @@ Anne-Marie
 
 #### Results A: Annual salamander counts in old growth and clear cut sections of Mack Creek
 
-Salamander counts in old growth and clear cut sections were compared between 1993 and 2017. Overall, salamander counts in both sections followed similar patterns; when counts in old growth sections were high (>200), counts in clear cut sections were also high. In 1994, 2011, and 2015-2017, salamander counts were higher in clear cut sections than old growth sections. In total, old growth sections had higher populations of salamanders (n = 5,951) compared to clear cut sections (n = 5,051) over the 17 year period.  
+Salamander counts in old growth and clear cut sections were compared between 1993 and 2017. Overall, salamander counts in both sections followed similar patterns; when counts in old-growth sections were high (>200), counts in clear cut sections were also high. Similarly, when counts of salamanders in old-growth sections were low (<200), salamander counts in clear cut sections were also low. In 1994, 2011, and 2015-2017, salamander counts were higher in clear cut sections than old growth sections. In total, old growth sections had higher counts of salamanders (n = 5,951) compared to clear cut sections (n = 5,051) over the 17 year period.  
 
 ```{r}
 # subdata: remove unneccessary columns and keep only salamander observations
@@ -84,11 +86,15 @@ ggplot(salamander_counts, aes(x = year, y = n)) +
 # I can't figure out how to change the title of the legend!?!?
 
 ```
+
 ***Figure 3.** Salamander counts in clear cut (orange) and old growth (green) sections of Mack Creek. Old growth sections are responsible for higher counts of salamanders for 80% of the time between 1993 and 2017. The populations in both sections display similar patterns of highs and lows. Data: Stanley Gregory, Andrews Forest LTER Sites.* 
 
-### Results B: Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth and clear cut sections of Mack Creek. 
+#### Results B: Table of 2017 salamander counts by channel classification 
 
+***Table 1.** Salamander counts in different channels of clear cut and old-growth forests: cascade, pool, and side channel. Data: Stanley Gregory, Andrews Forest LTER Sites.*
 ```{r}
+# Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth and clear cut sections of Mack Creek.
+
 #subdata: only include 2017 and salamader observations, exclude isolated pools from data
 salamander_channel_2017 <- mack_creek_verts %>% 
   filter (year == "2017") %>% 
@@ -123,39 +129,68 @@ salamander_table_counts_proportions_2017 %>%
   kable (col.names = c("Channel Type", "Clear Cut Forest", "Old-Growth Forest")) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 
-  
-```
-***Figure 4.** Counts of salamanders in different channels of clear cut and old-growth forests. NEEDS MORE INFO. Data: Stanley Gregory, Andrews Forest LTER Sites.*
-
-### Results C: Chi-Square test to determine if there is a significant difference in where in the channel Pacific giant salamanders are located (pool, cascade or side channel) between the two old growth and clear cut forests. 
-
-```{r}
-
-# subdata: remove qualitative column (channel type) and only include counts (not proportions)
-salamander_chi_counts <- salamander_table_2017 %>% 
-  dplyr::select(-channel_type) 
-
-salamander_chi_counts <- mack_creek_verts %>% 
-  filter (year == "2017") %>% 
-  filter (species == "DITE") %>% 
-  filter (unittype != "IP") %>% 
-  select (species, unittype, section) %>% 
-  group_by(unittype, section) %>% 
-  count(species) %>% 
-  select (unittype, section, n) %>% 
-  pivot_wider(names_from = section, values_from = n) %>% 
-  dplyr::select(-unittype) 
-
-# chi-sqaure test
-# chisq.test(salamander_chi_counts)
-
 
 ```
-i cannot get rid of the unittype/channel type column for the chi squared subdata!!
 
-### Results D: Is there a significant difference in mean weights for Pacific giant salamanders observed in clear cut vs  old growth forests in 2017
+Salamander counts in clear cut sections were higher in cascades (n~cascade~ = 247 (55.1%)) and side channels (n~sidechannel~ = 90 (54.9%)). In old-growth sections, pools had higher counts of salamanders (n~pool~ = 45 (59.2%)). 
+
+#### Results C: Is there a significant difference in salamander counts in channel locations in old growth and clear cut forests?
 
 ```{r, include = FALSE}
+# Chi-Square test to determine if there is a significant difference in what channel Pacific giant salamanders are located (pool, cascade or side channel) between the two old growth and clear cut forests
+
+# Null Hypothesis: There is no siginificant difference in what channel Pacific giant salamander are located between old growth and clear cut forests
+
+# Alternative Hypothesis: There is a significant difference in what channel Pacific giant salamander are located between old growth and clear cut forests
+
+# --------------------HANNAH'S c.o.d.e BELOW ----------------------
+  # first, get a contingency table of ONLY counts
+
+salamander_ct <- salamander_table_2017 %>%
+  column_to_rownames('channel_type')
+
+salamander_chi <- chisq.test(salamander_ct)
+
+salamander_chi # Anne-Marie, this worked out. We can delete your code below once we are sure - HGW
+
+# p-value of 0.06262, retain the null hypothesis
+
+
+# --------------------ANNE-MARIE'S c.o.d.e BELOW --------------------
+# subdata: remove qualitative column (channel type) and only include counts (not proportions)
+# salamander_chi_counts <- salamander_table_2017 %>% 
+#   dplyr::select(-channel_type) 
+
+
+# 
+# salamander_chi_counts <- mack_creek_verts %>%
+#   filter (year == "2017") %>%
+#   filter (species == "DITE") %>%
+#   filter (unittype != "IP") %>%
+#   select (species, unittype, section) %>%
+#   group_by(unittype, section) %>%
+#   count(species) %>%
+#   select (unittype, section, n) %>%
+#   pivot_wider(names_from = section, values_from = n) %>%
+#   dplyr::select(-unittype)
+
+# chi-sqaure test
+
+# salamander_chi <- chisq.test(salamander_chi_counts)
+
+# chisq.test(salamander_chi_counts)
+
+#  A google search suggested using 'unlist'? Nope, tried it and it didn't work. 
+# I'm going to try starting this from the beginning... 
+```
+
+We performed a Pearson's Chi-squared test to examine whether or not there was a significant difference in where in the channel Pacific giant salamanders are located between the two sections of forest (ol-growth and clear cut). The results from our test found a that there was no siginificant difference in what channel Pacific giant salamander are located in between old growth and clear cut forests ($\chi$^2^(`r salamander_chi$parameter`) = `r round(salamander_chi$statistic,2)`, *p* > 0.001). 
+
+#### Results D: Is there a significant difference in mean weights for salamanders observed in clear cut vs  old growth forests in 2017?
+
+```{r, include = FALSE}
+# Is there a significant difference in mean weights for Pacific giant salamanders observed in clear cut vs  old growth forests in 2017?
+
 # sub data: only include salamander observations in 2017 and remove unneccessary columns
 salamader_weights <- mack_creek_verts %>% 
   filter (species == "DITE") %>% 
@@ -184,11 +219,13 @@ weigths_ttest
 ```
 double check wording of the data spread conclusion to labs we've done with allison
 
-### Results E: Is there a significant difference between mean Pacific giant salamander weights in the 3 channel types: pools, cascades and side-channels of Mack Creek in 2017?
+#### Results E: Is there a significant difference between mean salamander weights in the 3 channel types of Mack Creek in 2017?
 
-Salamanders found in side channels of Mack Creek had the lowest mean weight (mean~2017~ = 5.68 grams) compared to salamanders found in pools (mean~2017~ = 9.30 grams) and cascades (mean~2017~ = 7.52) (Figure 5.).
+Salamanders found in side channels of Mack Creek had the lowest mean weight (mean~2017~ = 5.68 grams) compared to salamanders found in pools (mean~2017~ = 9.30 grams) and cascades (mean~2017~ = 7.52) (Figure 4.).
 
 ```{r}
+# Is there a significant difference between mean Pacific giant salamander weights in the 3 channel types: pools, cascades and side-channels of Mack Creek in 2017?
+
 # Visually compare the salamander weights between the three channel classifications: SC (side channel), P (pool), C (cascade). Use beeswarm or jitter. 
 
 # filter species, years, and channels for just Cascade, Pool, and Side Channel
@@ -238,9 +275,10 @@ ggplot() +
               
 # Is it ok to have negative error bar??
 ```
-***Figure 5.** Weights of salamanders in cascade, pool, and side channels of Mack Creek. Mean weights for each channel type are indicated by the black, center dot. Standard error of weights are indicated by the upper and lower bars. Data: Stanley Gregory, Andrews Forest LTER Sites.*
 
-```{r}
+***Figure 4.** Weights of salamanders in cascade, pool, and side channels of Mack Creek. Mean weights for each channel type are indicated by the black center dot. Standard error of weights are indicated by the upper and lower bars. Data: Stanley Gregory, Andrews Forest LTER Sites.*
+
+```{r, include = FALSE}
 # Is there a significant difference in mean weight for pacific giant salamanders observed in pools vs cascades vs side channels in 2017? 
 
   ## Null Hypothesis: the mean weight for different channel types are the same/not significantly different.
@@ -261,4 +299,8 @@ summary(salamander_aov)
 
 ### References 
 
+**HJ Andrews Experimental Forest Long Term-Ecological Research.** https://andrewsforest.oregonstate.edu/sites/default/files/lter/data/map/2011base.jpg
+
 **Gregory S. V. 2016**. Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to present. Environmental Data Initiative. https://doi.org/10.6073/pasta/5de64af9c11579266ef20da2ff32f702. Dataset accessed 11/25/2019.
+
+**Nafis, Gary.** "Great Pacific Salamander." CaliforniaHerps. http://www.californiaherps.com/salamanders/pages/d.tenebrosus.html
