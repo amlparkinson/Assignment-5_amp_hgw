@@ -184,7 +184,7 @@ salamander_chi # Anne-Marie, this worked out. We can delete your code below once
 # I'm going to try starting this from the beginning... 
 ```
 
-We performed a Pearson's Chi-squared test to examine whether or not there was a significant difference in where in the channel Pacific giant salamanders are located between the two sections of forest (ol-growth and clear cut). The results from our test found a that there was no siginificant difference in what channel Pacific giant salamander are located in between old growth and clear cut forests ($\chi$^2^(`r salamander_chi$parameter`) = `r round(salamander_chi$statistic,2)`, *p* > 0.001). 
+We performed a Pearson's Chi-squared test to examine whether or not there was a significant difference in where in the channel Pacific giant salamanders are located between the two sections of forest (old-growth and clear cut). The results from our test found a that there was no siginificant difference in what channel Pacific giant salamander are located ($\chi$^2^(`r salamander_chi$parameter`) = `r round(salamander_chi$statistic,2)`, *p* > 0.001). 
 
 #### Results D: Is there a significant difference in mean weights for salamanders observed in clear cut vs  old growth forests in 2017?
 
@@ -217,7 +217,7 @@ weigths_ttest <- t.test(weight~section, data=salamader_weights)
 
 weigths_ttest
 ```
-double check wording of the data spread conclusion to labs we've done with allison
+double check wording of the data spread conclusion to labs we've done with allison - Anne-Marie to do analysis here -
 
 #### Results E: Is there a significant difference between mean salamander weights in the 3 channel types of Mack Creek in 2017?
 
@@ -287,9 +287,26 @@ ggplot() +
 salamander_aov <- aov(weight ~ channel_type, data = channel_weights)
 summary(salamander_aov)
 
+  # Result: Reject the Null. 
+  # F(`r salamander_aov[1]`, `r salamander_aov[2]`) = `r round(salamander_aov[7],2)`, *p* = `r round(salamander_aov[9],3)`) <-- In-line referencing that I cannot get to work.. UGH
+
+# Post-hoc testing to determine whethere there is a difference in means between all three channels or just two - Using Tukey's HSD
+
+salamander_tukey <- TukeyHSD(salamander_aov)
+salamander_tukey
+
+# Results of Tukey's HSD :
+  # No difference in mean between Pool and Cascade
+  # Significant Difference between Side Channel and Cascade
+  # Significant Difference between Side Channel and Pool
+
+# To report your one-way ANOVA, need to unlist the outcomes
+
+salamander_outputs <-unlist(summary(salamander_aov))
+salamander_outputs
 # Describe any concerns you have about comparing means across the groups... 
 ```
-
+To determine whether or not there is a difference in mean weight for salamanders found in different channel types (pool, cascade, and side channel), we performed a one-way ANOVA test. The results indicate that there is a significant difference between at least two of the mean weights for salamanders in different channels. A Tukey's HSD post-hoc test was performed to determine which channels had significant differences between them F(`r salamander_outputs[1]`, `r salamander_outputs[2]`) = `r round(salamander_outputs[7],2)`, *p* = `r round(salamander_outputs[9],3)`). The results show that there are significant differences in mean weights between salamanders in side channels and cascades (insert diff) as well as siginificant differences between side channels and pools (insert diff). There was no significant difference in mean weights of salamanders between pools and cascades (insert diff.)
 
 ### Summary
 
