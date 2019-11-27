@@ -61,22 +61,14 @@ salamander_counts <- salamander_counts_data %>%
   count(species) %>%
   mutate(section_long = case_when(
     section %in% "CC" ~ "Clear Cut",
-    section %in% "OG" ~ "Old Growth"
-  ))
+    section %in% "OG" ~ "Old Growth"))
 
+# totalling counts of salamanders in CC and OG sections for result descriptions
 salamander_counts_totals <- salamander_counts %>%
   group_by(section) %>%
   summarize(total_pop = sum(n))
 
-# ggplot(salamander_counts, aes(fill = section, x = year, y = n)) +
-#   geom_bar(position = "dodge", stat = "identity") +
-#   scale_fill_manual("legend", values = c("CC" = "orange", "OG" = "seagreen")) +
-#   scale_x_continuous(lim = c(1993, 2017),
-#                      expand = c(0, 0),
-#                      breaks = seq(1993, 2017, by = 2)) +
-#   labs(x = "year", y = "salamander counts") +
-#   ggtitle("Salamander counts in old growth and clear cut sections")
-
+# Graph of salamander counts
 ggplot(salamander_counts, aes(x = year, y = n)) +
   geom_line(aes(color = section_long), size = 1) +
   geom_point(aes(color = section_long), size = 2) +
@@ -128,12 +120,12 @@ salamander_table_counts_proportions_2017 <- salamander_table_2017 %>%
 
 #  markdown ready table
 salamander_table_counts_proportions_2017 %>% 
-  kable (col.names = c("Channel Type", "Clear Cut Forest", "Old-Growth Forest")) %>% 
-  kable_styling()
+  kable (col.names = c("Channel Type", "Clear Cut Forest", "Old-Growth Forest")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 
   
 ```
-not sure why getting that error message. its not affecting the table counts/proportions (ex/when change position from front to rear dont get the error message)
+***Figure 4.** Counts of salamanders in different channels of clear cut and old-growth forests. NEEDS MORE INFO. Data: Stanley Gregory, Andrews Forest LTER Sites.*
 
 ### Results C: Chi-Square test to determine if there is a significant difference in where in the channel Pacific giant salamanders are located (pool, cascade or side channel) between the two old growth and clear cut forests. 
 
@@ -155,7 +147,7 @@ salamander_chi_counts <- mack_creek_verts %>%
   dplyr::select(-unittype) 
 
 # chi-sqaure test
-#chisq.test(salamander_chi_counts)
+# chisq.test(salamander_chi_counts)
 
 
 ```
@@ -163,7 +155,7 @@ i cannot get rid of the unittype/channel type column for the chi squared subdata
 
 ### Results D: Is there a significant difference in mean weights for Pacific giant salamanders observed in clear cut vs  old growth forests in 2017
 
-```{r}
+```{r, include = FALSE}
 # sub data: only include salamander observations in 2017 and remove unneccessary columns
 salamader_weights <- mack_creek_verts %>% 
   filter (species == "DITE") %>% 
@@ -194,9 +186,12 @@ double check wording of the data spread conclusion to labs we've done with allis
 
 ### Results E: Is there a significant difference between mean Pacific giant salamander weights in the 3 channel types: pools, cascades and side-channels of Mack Creek in 2017?
 
+Salamanders found in side channels of Mack Creek had the lowest mean weight (mean~2017~ = 5.68 grams) compared to salamanders found in pools (mean~2017~ = 9.30 grams) and cascades (mean~2017~ = 7.52) (Figure 5.).
+
 ```{r}
 # Visually compare the salamander weights between the three channel classifications: SC (side channel), P (pool), C (cascade). Use beeswarm or jitter. 
 
+# filter species, years, and channels for just Cascade, Pool, and Side Channel
 channel_weights <- mack_creek_verts %>%
   filter(species == "DITE") %>%
   filter(year == 2017) %>%
@@ -206,6 +201,7 @@ channel_weights <- mack_creek_verts %>%
     unittype %in% "P" ~"Pool",
     unittype %in% "SC" ~ "Side Channel"))
 
+# Calculate the mean, standard deviation, standard error, and variance
 channel_weights_mean <- channel_weights %>%
   select(unittype, weight, channel_type) %>%
   group_by(channel_type) %>%
@@ -215,9 +211,7 @@ channel_weights_mean <- channel_weights %>%
             se_weight = sd((weight) / sqrt(n()), na.rm = TRUE),
             var_weight = var(weight, na.rm = TRUE))
 
-# having issues with these damn NA values!!! >:(
-  
-
+# Graph the salamander weights for all channels for 2017
 ggplot() +
   ggbeeswarm::geom_beeswarm(data = channel_weights,
                             aes(x = channel_type,
@@ -239,24 +233,31 @@ ggplot() +
              color = "black",
              size = 4) +
   labs(x = "Channel Type",
-       y = "weight (grams)") +
+       y = "Weight (grams)") +
   ggtitle("2017 Salamander Weight in Different Channels")
-  
               
 # Is it ok to have negative error bar??
 ```
+***Figure 5.** Weights of salamanders in cascade, pool, and side channels of Mack Creek. Mean weights for each channel type are indicated by the black, center dot. Standard error of weights are indicated by the upper and lower bars. Data: Stanley Gregory, Andrews Forest LTER Sites.*
 
 ```{r}
 # Is there a significant difference in mean weight for pacific giant salamanders observed in pools vs cascades vs side channels in 2017? 
 
+  ## Null Hypothesis: the mean weight for different channel types are the same/not significantly different.
+  ## Alternative Hypothesis: the mean weight for differnt channel types are not the same/are significantly different. 
+
 salamander_aov <- aov(weight ~ channel_type, data = channel_weights)
 summary(salamander_aov)
 
-# Descrube any concerns you have about comparing means across the groups... 
+# Describe any concerns you have about comparing means across the groups... 
 ```
 
 
 ### Summary
+
+- finding 1
+- finding 2
+- finding 3
 
 ### References 
 
