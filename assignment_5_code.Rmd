@@ -77,17 +77,22 @@ ggplot(salamander_counts, aes(x = year, y = n)) +
   scale_x_continuous(lim = c(1993, 2017),
                      expand = c(0, 0),
                      breaks = seq(1993, 2017, by = 2)) +
-  scale_color_manual(values = c("orange", "seagreen")) +
+  scale_y_continuous(lim=c(0, 400),
+                     expand=c(0,0),
+                     breaks=seq(100, 400, by=100)) +
+   scale_color_manual(name="Creek Section", values = c("orange", "seagreen")) +
   theme_bw() +
-  labs(x = "Year",
-       y = "Salamander count",
-       title = "Salamander Count in Clear Cut and Old Growth Sections")
+  labs(x = "\nYear",
+       y = "Annual Salamander Counts\n",
+       title = "Salamander Count in Clear Cut and Old Growth Sections\n") +
+    theme(plot.title = element_text(hjust=0.5))
+  
 
-# I can't figure out how to change the title of the legend!?!?
+# I can't figure out how to change the title of the legend!?!? ah ha! got it! I was trying to figure this same thing out earlier and couldnt get it
 
 ```
 
-***Figure 3.** Salamander counts in clear cut (orange) and old growth (green) sections of Mack Creek. Old growth sections are responsible for higher counts of salamanders for 80% of the time between 1993 and 2017. The populations in both sections display similar patterns of highs and lows. Data: Stanley Gregory, Andrews Forest LTER Sites.* 
+***Figure 3.** Annual salamander counts in clear cut (orange) and old growth (green) sections of Mack Creek. Old growth sections are responsible for higher counts of salamanders for 80% of the time between 1993 and 2017. The populations in both sections display similar patterns of highs and lows. Data: Stanley Gregory, Andrews Forest LTER Sites.* 
 
 #### Results B: Table of 2017 salamander counts by channel classification 
 
@@ -143,12 +148,12 @@ Salamander counts in clear cut sections were higher in cascades (n~cascade~ = 24
 
 # Alternative Hypothesis: There is a significant difference in what channel Pacific giant salamander are located between old growth and clear cut forests
 
-# --------------------HANNAH'S c.o.d.e BELOW ----------------------
-  # first, get a contingency table of ONLY counts
 
+# first, get a contingency table of ONLY counts
 salamander_ct <- salamander_table_2017 %>%
   column_to_rownames('channel_type')
 
+# chi-square test
 salamander_chi <- chisq.test(salamander_ct)
 
 salamander_chi # Anne-Marie, this worked out. We can delete your code below once we are sure - HGW
@@ -156,32 +161,6 @@ salamander_chi # Anne-Marie, this worked out. We can delete your code below once
 # p-value of 0.06262, retain the null hypothesis
 
 
-# --------------------ANNE-MARIE'S c.o.d.e BELOW --------------------
-# subdata: remove qualitative column (channel type) and only include counts (not proportions)
-# salamander_chi_counts <- salamander_table_2017 %>% 
-#   dplyr::select(-channel_type) 
-
-
-# 
-# salamander_chi_counts <- mack_creek_verts %>%
-#   filter (year == "2017") %>%
-#   filter (species == "DITE") %>%
-#   filter (unittype != "IP") %>%
-#   select (species, unittype, section) %>%
-#   group_by(unittype, section) %>%
-#   count(species) %>%
-#   select (unittype, section, n) %>%
-#   pivot_wider(names_from = section, values_from = n) %>%
-#   dplyr::select(-unittype)
-
-# chi-sqaure test
-
-# salamander_chi <- chisq.test(salamander_chi_counts)
-
-# chisq.test(salamander_chi_counts)
-
-#  A google search suggested using 'unlist'? Nope, tried it and it didn't work. 
-# I'm going to try starting this from the beginning... 
 ```
 
 We performed a Pearson's Chi-squared test to examine whether or not there was a significant difference in where in the channel Pacific giant salamanders are located between the two sections of forest (old-growth and clear cut). The results from our test found a that there was no siginificant difference in what channel Pacific giant salamander are located ($\chi$^2^(`r salamander_chi$parameter`) = `r round(salamander_chi$statistic,2)`, *p* > 0.001). 
@@ -297,7 +276,7 @@ salamander_tukey
 
 # Results of Tukey's HSD :
   # No difference in mean between Pool and Cascade
-  # Significant Difference between Side Channel and Cascade
+  # Significant Difference between Side Channel and Cascade  --> p = 0.84 though...
   # Significant Difference between Side Channel and Pool
 
 # To report your one-way ANOVA, need to unlist the outcomes
