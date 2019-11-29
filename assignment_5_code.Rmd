@@ -21,6 +21,7 @@ library(dplyr)
 library(kableExtra)
 library(ggbeeswarm)
 library(car)
+library(effsize)
 
 # add data -------------------------------------------------------------------------
 
@@ -201,7 +202,15 @@ ggplot (salamader_weights, aes (sample=weight)) +
 weigths_ttest <- t.test(weight~section, data=salamader_weights)
 
 weigths_ttest
+
+# effect size ---------------------------------------------------------------
+
+weights_effectsize <- cohen.d(weight~section, data=salamader_weights)
+
+weights_effectsize
 ```
+
+A two-sample t-test was used to determine if mean salamander weights in 2017 were significantly different in old-growth and clear cut forests. 2017 salamander weights in clear cut forests (`r round(weigths_ttest$estimate[1],2)`g) did not differ significantly from 2017 salamander weights in old-growth forests (`r round(weigths_ttest$estimate[2],2)`g) (t(`r round(weigths_ttest$parameter,2)`) = `r round(weigths_ttest$statistic,2)`, *p* = `r round(weigths_ttest$p.value,2)`). A negligable effect size (`r round(weights_effectsize$estimate,1)`) confirms that there is no difference in mean 2017 weights by section along Mack Creek.
 
 
 #### Results E: Is there a significant difference between mean salamander weights in the 3 channel types of Mack Creek in 2017?
@@ -233,6 +242,12 @@ channel_weights_mean <- channel_weights %>%
             se_weight = sd((weight) / sqrt(n()), na.rm = TRUE),
             var_weight = var(weight, na.rm = TRUE))
 
+# levene's test to assess equal variance 
+
+leveneTest(weight~channel_type, data=channel_weights) 
+#p=0.09, accept null that the variances are not different
+
+
 # Graph the salamander weights for all channels for 2017
 ggplot() +
   ggbeeswarm::geom_beeswarm(data = channel_weights,
@@ -254,14 +269,15 @@ ggplot() +
              aes(x = channel_type, y = mean_weight),
              color = "black",
              size = 4) +
-  labs(x = "Channel Type",
-       y = "Weight (grams)") +
-  ggtitle("2017 Salamander Weight in Different Channels")
+  labs(x = "\nChannel Type",
+       y = "Weight (grams)\n") +
+  ggtitle("2017 Salamander Weight in Different Channels\n") +
+  theme(plot.title = element_text(hjust=0.5))
               
 # Is it ok to have negative error bar??
 ```
 
-***Figure 4.** Weights of salamanders in cascade, pool, and side channels of Mack Creek. Mean weights for each channel type are indicated by the black center dot. Standard error of weights are indicated by the upper and lower bars. Data: Stanley Gregory, Andrews Forest LTER Sites.*
+***Figure 4.** 2017 weights of salamanders in cascade, pool, and side channels of Mack Creek. Mean weights for each channel type are indicated by the black center dot. Standard error of weights are indicated by the upper and lower bars. Data: Stanley Gregory, Andrews Forest LTER Sites.*
 
 ```{r, include = FALSE}
 # Is there a significant difference in mean weight for pacific giant salamanders observed in pools vs cascades vs side channels in 2017? 
@@ -291,12 +307,14 @@ salamander_outputs <-unlist(summary(salamander_aov))
 salamander_outputs
 # Describe any concerns you have about comparing means across the groups... 
 ```
-To determine whether or not there is a difference in mean weight for salamanders found in different channel types (pool, cascade, and side channel), we performed a one-way ANOVA test. The results indicate that there is a significant difference between at least two of the mean weights for salamanders in different channels. A Tukey's HSD post-hoc test was performed to determine which channels had significant differences between them F(`r salamander_outputs[1]`, `r salamander_outputs[2]`) = `r round(salamander_outputs[7],2)`, *p* = `r round(salamander_outputs[9],3)`). The results show that there are significant differences in mean weights between salamanders in side channels and cascades (insert diff) as well as siginificant differences between side channels and pools (insert diff). There was no significant difference in mean weights of salamanders between pools and cascades (insert diff.)
+To determine whether or not there is a difference in 2017 mean weight for salamanders found in different channel types (pool, cascade, and side channel), we performed a one-way ANOVA test. The results indicate that there is a significant difference between at least two of the mean weights for salamanders in different channels. A Tukey's HSD post-hoc test was performed to determine which channels had significant differences between 2017 mean weights F(`r salamander_outputs[1]`, `r salamander_outputs[2]`) = `r round(salamander_outputs[7],2)`, *p* = `r round(salamander_outputs[9],3)`). The results show that there is a significant difference in one pairwise commparison: mean weights between salamanders in side channels and poosls
+
+(insert diff) as well as siginificant differences between side channels and pools (insert diff). There was no significant difference in mean weights of salamanders between pools and cascades (insert diff.)
 
 ### Summary
 
-- finding 1
-- finding 2
+- Salamander counts have generally increased in both sections of Mack Creek (clear cut and old-growth forests) since surveys of salamander populatoins began in 1993. 
+- There is no significant difference in 2017 salamander wights in clear cut forests compared to old growth forests. 
 - finding 3
 
 ### References 
