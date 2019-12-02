@@ -32,7 +32,7 @@ mack_creek_verts <- read_csv("mack_creek_vertebrates.csv") %>%
 
 
 ### Introduction
-Beginning in 1993, researchers from the [Andrews Experimental Forest Long-Term Ecological Research (LTER)](https://andrewsforest.oregonstate.edu) have been monitoring populations of Pacific Giant Salamanders, *Dicamptodon tenebrosus*, specifically in Mack Creek (Gregory 2016). The Experimental Forest is part of the Willamette National Forest in western Oregon and managed by the U.S. Forest Service and Oregon State University (Figure 2). Researchers are interested in how disturbances in forests effect biota. The data was collected from two sections of Mack Creek - a forest clear cut in 1963 and a 500 year old growth coniferous forest. Here, we will use the data collected by the Andrews Experimental Forest Team to compare the differences in size and weight distributions of salamanders from clear cut and old growth sections. 
+Beginning in 1993, researchers from the [Andrews Experimental Forest Long-Term Ecological Research (LTER)](https://andrewsforest.oregonstate.edu) have been monitoring populations of Pacific Giant Salamanders, *Dicamptodon tenebrosus* (Figure 1), specifically in Mack Creek (Gregory 2016). The Experimental Forest is part of the Willamette National Forest in western Oregon and managed by the U.S. Forest Service and Oregon State University (Figure 2). Researchers are interested in how disturbances in forests effect biota. The data was collected from two sections of Mack Creek - a forest clear cut in 1963 and a 500 year old growth coniferous forest. Here, we will use the data collected by the Andrews Experimental Forest Team to compare the differences in size and weight distributions of salamanders from clear cut and old growth sections in Mack Creek. 
 
 ![](Dicamptodon tenebrosus.jpg) 
 
@@ -46,16 +46,16 @@ Beginning in 1993, researchers from the [Andrews Experimental Forest Long-Term E
 
 Data for salamander counts and weights were annually collected since 1993 in two 150 meter reaches within Mack Creek. The lower reach is in a clear cut forest, while the upper reach is in an old growth forest. The reaches were divided into three 50 meter sections blocked off by nets, then each 50 m section was sampled with two-pass electrofishing (Gregory 2016). All vertebrates captured were measured and weighed. Channel measurements, such as channel type, were aso recorded. For more information on collection methods and spatial information, please refer to the [metadata](https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-and&identifier=4027&revision=12).
 
-Trends in salamander counts from 1993-2017 were visually compared in clear cut and old growth reaches. Salamander counts were then compared using a Pearson's chi-square test to determine if salamander counts differed statistically by channel type (cascade, pool, side channel; $\alpha$ = 0.05 throughout). 2017 salamander weights were compared in clear cut and old growth forest sections and in three different channel types using a two sample t test and an ANOVA, respectively, to determine if mean weights differed sigifnicantly by reach section and or channel type. To measure the maginitude of the difference between the means, we calculated the effect size using Cohen's d. All analyses and figures were prepared using R software version 3.6.1. Collaboration between authors was done using GitHub. 
+Trends in salamander counts from 1993-2017 were visually compared in clear cut and old growth reaches. Salamander counts were then compared using a Pearson's chi-square test to determine if salamander counts differed statistically by channel type (cascade, pool, side channel; $\alpha$ = 0.05 throughout). 2017 salamander weights were compared in clear cut and old growth forest sections and in three different channel types using a two sample t test and an ANOVA, respectively, to determine if mean weights differed sigifnicantly by reach section and or by channel type. To measure the maginitude of the difference between the means, we calculated the effect size using Cohen's d. All analyses and figures were prepared using R software version 3.6.1. Collaboration between authors was done using GitHub. 
 
 
 ### Results
 
 #### Results A: Annual salamander counts in old growth and clear cut sections of Mack Creek
 
-Salamander counts in old growth and clear cut sections were compared between 1993 and 2017. Overall, salamander counts in both sections followed similar patterns; when counts in old-growth sections increased, counts in clear cut sections also increased. Similarly, when counts of salamanders in old-growth sections decreased, salamander counts in clear cut sections also decreased. Likely, environmental factors affect annual variability in salamander counts. 
+Salamander counts in old growth and clear cut sections were compared between 1993 and 2017. Overall, salamander counts in both sections generally followed similar patterns; when counts in old-growth sections increased, counts in clear cut sections also increased. Similarly, when counts of salamanders in old-growth sections decreased, salamander counts in clear cut sections also decreased. Likely, environmental factors affect annual variability in salamander counts. 
 
-Generally, salamander observations were higher in old growth forest. However, in 1994 and 2015-2017, salamander counts were higher in clear cut sections. Between 1993 and 2017, salamander counts in the clear cut and od growth forests increased by 129% and 154%, respectively. Throughout the study period, salamander counts in the clear cut section reached a high of 368 in 2017 and a low of 137 in 2014. Comparatively, salamander counts in the old growth section reached a high of 380 in 2002 and a low of 129 in 1993. In general, salamader counts have been increasing since the study began in 1993. 
+Generally, salamander observations were higher in old growth forest. However, in 1994 and 2015-2017, salamander counts were higher in clear cut sections. Between 1993 and 2017, salamander counts in the clear cut and old growth forests increased by 129% and 154%, respectively. Throughout the study period, salamander counts in the clear cut section reached a high of 368 in 2017 and a low of 137 in 2014. Comparatively, salamander counts in the old growth section reached a high of 380 in 2002 and a low of 129 in 1993. In general, salamader counts have been increasing since the study began in 1993. 
 
 
 ```{r}
@@ -91,7 +91,7 @@ ggplot(salamander_counts, aes(x = year, y = n)) +
   theme_bw() +
   labs(x = "\nYear",
        y = "Annual Salamander Counts\n",
-       title = "Salamander Count in Clear Cut and Old Growth Sections\n") +
+       title = "Salamander Count in Clear Cut and Old Growth Sections of Mack Creek (1993-2017)\n") +
     theme(plot.title = element_text(hjust=0.5))
   
 
@@ -99,11 +99,11 @@ ggplot(salamander_counts, aes(x = year, y = n)) +
 
 ```
 
-***Figure 3:** Annual salamander counts in clear cut (orange) and old growth (green) sections of Mack Creek. Old growth sections are responsible for higher counts of salamanders for 80% of the time between 1993 and 2017. The populations in both sections display similar patterns of highs and lows. Data: Stanley Gregory, Andrews Forest LTER Sites.* 
+***Figure 3:** Annual salamander counts in clear cut (orange) and old growth (green) sections of Mack Creek from 1993-2017. Old growth sections are responsible for higher counts of salamanders for 80% of the study period. The populations in both sections display similar patterns of highs and lows. Data: Stanley Gregory, Andrews Forest LTER Sites.* 
 
 #### Results B: Table of 2017 salamander counts by channel classification 
 
-***Table 1:** Salamander counts in different channel types (cascade, pool, and side channel) in clear cut and old-growth forests. Data: Stanley Gregory, Andrews Forest LTER Sites.*
+***Table 1:** Salamander counts in different channel types (cascade, pool, and side channel) in clear cut and old-growth forests in Mack Creek (1993-2017). Data: Stanley Gregory, Andrews Forest LTER Sites.*
 ```{r}
 # Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth and clear cut sections of Mack Creek.
 
@@ -144,7 +144,7 @@ salamander_table_counts_proportions_2017 %>%
 
 ```
 
-Salamander counts in clear cut sections were higher in cascades (n~cascade~ = 247 (55.1%)) and side channels (n~sidechannel~ = 90 (54.9%)). In old-growth sections, pools had higher counts of salamanders (n~pool~ = 45 (59.2%)). 
+2017 salamander counts in clear cut sections were higher in cascades (n~cascade~ = 247 (55.1%)) and side channels (n~sidechannel~ = 90 (54.9%)). In old-growth sections, pools had higher counts of salamanders (n~pool~ = 45 (59.2%)). 
 
 #### Results C: Is there a significant difference in salamander counts in channel locations in old growth and clear cut forests?
 
@@ -170,9 +170,12 @@ salamander_chi
 
 ```
 
-We performed a Pearson's chi-squared test to examine whether or not there was a significant difference in where in the channel Pacific giant salamanders are located between the two sections of forest (old-growth and clear cut). The results from our test found that there was no siginificant difference in what channel Pacific giant salamander are located ($\chi$^2^(`r salamander_chi$parameter`) = `r round(salamander_chi$statistic,2)`, *p* > 0.001). This can be seen in Table 1 - the counts in clear cut and old-growth channel types were not different enough for the chi-squared test to find a significant difference. For example, Salamander counts were actually higher in clear cut sections in the forest for side channels (n~side channel~ = 90) and cascade (n~cascade~ = 247) channel types. Pools were the only channel type to gave higher salamander counts in old-growth forests (n~pool~ = 45). 
+We performed a Pearson's chi-squared test to examine whether or not there was a significant difference in where in the channel Pacific giant salamanders are located between the two sections of forest (old-growth and clear cut). The results from our test found that there was no siginificant difference in what channel Pacific giant salamander are located ($\chi$^2^(`r salamander_chi$parameter`) = `r round(salamander_chi$statistic,2)`, *p* > 0.001). 
 
-From the results of Table 1 and the chi-squared test, it seems evident that salamanders can adapt to the clear-cutting of forests and can possibly survive better than in intact old-growth forests.
+**I dont tihnk the rest of this is necessary** its confusing when the counts are referenced bc the point of looking at proportions is bc actual counts can be misleading 
+
+This can be seen in Table 1 - the counts in clear cut and old-growth channel types were not different enough for the chi-squared test to find a significant difference. For example, Salamander counts were actually higher in clear cut sections in the forest for side channels (n~side channel~ = 90) and cascade (n~cascade~ = 247) channel types. Pools were the only channel type to gave higher salamander counts in old-growth forests (n~pool~ = 45). 
+
 
 
 #### Results D: Is there a significant difference in mean weights for salamanders observed in clear cut vs  old growth forests in 2017?
@@ -213,12 +216,12 @@ weights_effectsize <- cohen.d(weight~section, data=salamader_weights)
 weights_effectsize
 ```
 
-A two-sample t-test was used to determine if mean salamander weights in 2017 were significantly different in old-growth and clear cut forests. 2017 salamander weights in clear cut forests (`r round(weigths_ttest$estimate[1],2)`g) did not differ significantly from 2017 salamander weights in old-growth forests (`r round(weigths_ttest$estimate[2],2)`g) (t(`r round(weigths_ttest$parameter,2)`) = `r round(weigths_ttest$statistic,2)`, *p* = `r round(weigths_ttest$p.value,2)`). A negligable effect size (`r round(weights_effectsize$estimate,1)`) confirms that there is no difference in mean 2017 weights by section along Mack Creek.
+A two-sample t-test was used to determine if mean salamander weights in 2017 were significantly different in old-growth and clear cut forests. 2017 mean salamander weights in clear cut forests (`r round(weigths_ttest$estimate[1],2)` grams) did not differ significantly from 2017 salamander weights in old-growth forests (`r round(weigths_ttest$estimate[2],2)` grams) (t(`r round(weigths_ttest$parameter,2)`) = `r round(weigths_ttest$statistic,2)`, *p* = `r round(weigths_ttest$p.value,2)`). A negligable effect size (`r round(weights_effectsize$estimate,1)`) confirms that there is no difference in mean 2017 weights by section along Mack Creek.
 
 
 #### Results E: Is there a significant difference between mean salamander weights in the 3 channel types of Mack Creek in 2017?
 
-Salamanders found in side channels of Mack Creek had the lowest mean weight (mean~2017~ = 5.68 grams) compared to salamanders found in pools (mean~2017~ = 9.30 grams) and cascades (mean~2017~ = 7.52 grams) (Figure 4.).
+Salamanders found in 2017 in side channels of Mack Creek had the lowest mean weight (mean~2017~ = 5.68 grams) compared to salamanders found in pools (mean~2017~ = 9.30 grams) and cascades (mean~2017~ = 7.52 grams) (Figure 4.).
 
 ```{r, include = FALSE}
 # Is there a significant difference between mean Pacific giant salamander weights in the 3 channel types: pools, cascades and side-channels of Mack Creek in 2017?
@@ -313,7 +316,7 @@ salamander_outputs <-unlist(summary(salamander_aov))
 salamander_outputs
 
 ```
-To determine whether or not there is a difference in 2017 mean weight for salamanders found in different channel types (pool, cascade, and side channel), we performed a one-way ANOVA test. The results indicate that there is a significant difference between at least two of the mean weights for salamanders in different channels. A Tukey's HSD post-hoc test was performed to determine which channels had significant differences between 2017 mean weights F(`r salamander_outputs[1]`, `r salamander_outputs[2]`) = `r round(salamander_outputs[7],2)`, *p* = `r round(salamander_outputs[9],3)`). The results show that there is a significant difference in one pairwise comparison: mean weights between salamanders in side channels (5.68g $\pm$ 0.65g)(mean $\pm$ SE) and pools (9.30g $\pm$ 1.56g)(mean $\pm$ SE). There was no significant difference in mean weights of salamanders between pools (9.30g $\pm$ 1.56g)(mean $\pm$ SE) and cascades (7.52g $\pm$ 0.43g)(mean $\pm$ SE), as well as no significant difference between side channel (5.68g $\pm$ 0.65g)(mean $\pm$ SE) and cascades (7.52g $\pm$ 0.43g)(mean $\pm$ SE).
+To determine whether or not there is a difference in 2017 mean weight for salamanders found in different channel types (pool, cascade, and side channel), we performed a one-way ANOVA test. The results **(p=...), hannah, do you know how to extract values from an anova? was that in allisons notes?** indicate that there is a significant difference between at least two of the mean weights for salamanders in different channels. A Tukey's HSD post-hoc test was performed to determine which channels had significant differences between 2017 mean weights F(`r salamander_outputs[1]`, `r salamander_outputs[2]`) = `r round(salamander_outputs[7],2)`, *p* = `r round(salamander_outputs[9],3)`). The results show that there is a significant difference in one pairwise comparison: mean weights between salamanders in side channels (5.68g $\pm$ 0.65g)(mean $\pm$ SE) and pools (9.30g $\pm$ 1.56g)(mean $\pm$ SE). There was no significant difference in mean weights of salamanders between pools (9.30g $\pm$ 1.56g)(mean $\pm$ SE) and cascades (7.52g $\pm$ 0.43g)(mean $\pm$ SE), as well as no significant difference between side channel (5.68g $\pm$ 0.65g)(mean $\pm$ SE) and cascades (7.52g $\pm$ 0.43g)(mean $\pm$ SE).
 
 The actual differences in mean weights between channel types was 1.78 grams between pools and cascades and 1.84 grams between side channels and cascades. These differences were significantly lower than the difference between pools and side channles, which was 3.62 grams (about 50% higher than the others). 
 
@@ -323,11 +326,14 @@ The actual differences in mean weights between channel types was 1.78 grams betw
 
 Our above tests are parametric tests that include assumptions of normal distribution of the salamander populations, which was done so by using mean weights of salamanders. However, an unpaired non-parametric test may also be appropriate. Non-parametric tests can be used for non-normal distributions, as we saw our salamander data exhibited above through qq tests and histograms. In that case, we would perform a Mann-Whitney U test to rank the weights of the salamanders instead of comparing the means. 
 
+**amp can finish up later bc its late, talk about the results of the levene test and anovas being robust to normality assumption and non parametric tests have less statistical power**
+
 ### Summary
 
-- Salamander counts have generally increased in both sections of Mack Creek (clear cut and old-growth forests) since surveys of salamander populations began in 1993 (Figure 3)
-- There is no significant difference in 2017 salamander weights in clear cut forests compared to old growth forests. (reference figure or table here) 
-- Mean salamander weights were only significantly different in side channels and pools (Figure 4)
+- Salamander counts have generally increased in both sections of Mack Creek (clear cut and old-growth forests) since surveys of salamander populations began in 1993 (Figure 3). It is evident that salamanders can adapt to the clear-cutting of forests.
+- There is no significant difference in 2017 salamander weights in clear cut forests compared to old growth forests. (reference figure or table here). 
+- Mean salamander weights were only significantly different in side channels and pools (Figure 4).
+
 
 ### References 
 
