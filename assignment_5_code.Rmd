@@ -170,11 +170,7 @@ salamander_chi
 
 ```
 
-We performed a Pearson's chi-squared test to examine whether or not there was a significant difference in where in the channel Pacific giant salamanders are located between the two sections of forest (old-growth and clear cut). The results from our test found that there was no siginificant difference in what channel Pacific giant salamander are located ($\chi$^2^(`r salamander_chi$parameter`) = `r round(salamander_chi$statistic,2)`, *p* > 0.001). 
-
-**I dont tihnk the rest of this is necessary** its confusing when the counts are referenced bc the point of looking at proportions is bc actual counts can be misleading 
-
-This can be seen in Table 1 - the counts in clear cut and old-growth channel types were not different enough for the chi-squared test to find a significant difference. For example, Salamander counts were actually higher in clear cut sections in the forest for side channels (n~side channel~ = 90) and cascade (n~cascade~ = 247) channel types. Pools were the only channel type to gave higher salamander counts in old-growth forests (n~pool~ = 45). 
+We performed a Pearson's chi-squared test to examine whether or not there was a significant difference in where in the channel Pacific giant salamanders are located between the two sections of forest (old-growth and clear cut). The results from our test found that there was no siginificant difference in what channel Pacific giant salamander are located in forest section ($\chi$^2^(`r salamander_chi$parameter`) = `r round(salamander_chi$statistic,2)`, *p* = `r round(salamander_chi$p.value,2)`). 
 
 
 
@@ -216,12 +212,11 @@ weights_effectsize <- cohen.d(weight~section, data=salamader_weights)
 weights_effectsize
 ```
 
-A two-sample t-test was used to determine if mean salamander weights in 2017 were significantly different in old-growth and clear cut forests. 2017 mean salamander weights in clear cut forests (`r round(weigths_ttest$estimate[1],2)` grams) did not differ significantly from 2017 salamander weights in old-growth forests (`r round(weigths_ttest$estimate[2],2)` grams) (t(`r round(weigths_ttest$parameter,2)`) = `r round(weigths_ttest$statistic,2)`, *p* = `r round(weigths_ttest$p.value,2)`). A negligable effect size (`r round(weights_effectsize$estimate,1)`) confirms that there is no difference in mean 2017 weights by section along Mack Creek.
+A two-sample t-test was used to determine if mean salamander weights in 2017 were significantly different between old-growth and clear cut forests. 2017 mean salamander weights in clear cut forests (`r round(weigths_ttest$estimate[1],2)` g) did not differ significantly from 2017 salamander weights in old-growth forests (`r round(weigths_ttest$estimate[2],2)` g) (t(`r round(weigths_ttest$parameter,2)`) = `r round(weigths_ttest$statistic,2)`, *p* = `r round(weigths_ttest$p.value,2)`). A negligable effect size (`r round(weights_effectsize$estimate,1)`) confirms that there is no difference in mean 2017 weights by section along Mack Creek.
 
 
 #### Results E: Is there a significant difference between mean salamander weights in the 3 channel types of Mack Creek in 2017?
 
-Salamanders found in 2017 in side channels of Mack Creek had the lowest mean weight (mean~2017~ = 5.68 grams) compared to salamanders found in pools (mean~2017~ = 9.30 grams) and cascades (mean~2017~ = 7.52 grams) (Figure 4.).
 
 ```{r, include = FALSE}
 # Is there a significant difference between mean Pacific giant salamander weights in the 3 channel types: pools, cascades and side-channels of Mack Creek in 2017?
@@ -254,7 +249,7 @@ leveneTest(weight~channel_type, data=channel_weights)
 #p=0.09, accept null that the variances are not different
 
 ```
-
+Salamanders found in 2017 in side channels of Mack Creek had the lowest mean weight (mean~2017~ = `r round(channel_weights_mean$mean_weight[3], 2)` g) compared to salamanders found in pools (mean~2017~ = `r round(channel_weights_mean$mean_weight[2], 2)` g) and cascades (mean~2017~ = `r round(channel_weights_mean$mean_weight[1], 2)` g) (Figure 4.). 
 
 ```{r}
 # Graph the salamander weights for all channels for 2017
@@ -270,7 +265,7 @@ ggplot() +
                             show.legend = FALSE) +
   geom_errorbar(data = channel_weights_mean,
                 aes(x = channel_type,
-                    ymin = mean_weight - sd_weight,
+                    ymin = mean_weight - mean_weight,  ## should be mean_weight - sd_weight
                     ymax = mean_weight + sd_weight),
                 color = "black",
                 width = 0.1) +
@@ -281,12 +276,13 @@ ggplot() +
   labs(x = "\nChannel Type",
        y = "Weight (grams)\n") +
   ggtitle("2017 Salamander Weight in Different Channels\n") +
-  theme(plot.title = element_text(hjust=0.5))
+  theme(plot.title = element_text(hjust=0.5)) +
+  scale_y_continuous(expand=c(0,0),
+                     lim=c(0, 80))        # gets rid of error bars because they go below 0, but limit y axis to 0
               
-# Limit y-axis to zero so sd bars aren't negative.
 ```
 
-***Figure 4:** 2017 weights of salamanders in cascade, pool, and side channels of Mack Creek. Mean weights for each channel type are indicated by the black center dot. Standard deviation of weights are indicated by the upper and lower bars. Data: Stanley Gregory, Andrews Forest LTER Sites.*
+***Figure 4:** Distribution of 2017 weights of salamanders in cascade, pool, and side channels of Mack Creek. Mean weights for each channel type are indicated by the black center dot. Standard deviation of weights are indicated by the upper and lower bars. Data: Stanley Gregory, Andrews Forest LTER Sites.*
 
 ```{r, include = FALSE}
 # Is there a significant difference in mean weight for pacific giant salamanders observed in pools vs cascades vs side channels in 2017? 
@@ -303,7 +299,7 @@ summary(salamander_aov)
 # Post-hoc testing to determine whethere there is a difference in means between all three channels or just two - Using Tukey's HSD
 
 salamander_tukey <- TukeyHSD(salamander_aov)
-salamander_tukey
+ salamander_tukey
 
 # Results of Tukey's HSD :
   # No difference in mean between Pool and Cascade
@@ -320,23 +316,23 @@ salamander_outputs
 df <- data.frame(salamander_tukey$channel_type)
 
 ```
-To determine whether or not there is a difference in 2017 mean weight for salamanders found in different channel types (pool, cascade, and side channel), we performed a one-way ANOVA test. The results  F(`r salamander_outputs[1]`, `r salamander_outputs[2]`) = `r round(salamander_outputs[7],2)`, *p* = `r round(salamander_outputs[9],3)`) indicate that there is a significant difference between at least two of the mean weights for salamanders in different channels. A Tukey's HSD post-hoc test was performed to determine which channels had significant differences between 2017 mean weights. The results show that there is a significant difference in one pairwise comparison: mean weights between salamanders in side channels (5.68g $\pm$ 0.65g)(mean $\pm$ SE) and pools (9.30g $\pm$ 1.56g)(mean $\pm$ SE) (*p* = `r round(df$p.adj[3],3)`). There was no significant difference in mean weights of salamanders between pools (9.30g $\pm$ 1.56g)(mean $\pm$ SE) and cascades (7.52g $\pm$ 0.43g)(mean $\pm$ SE) (*p* = `r round(df$p.adj[1],3)`), as well as no significant difference between side channel (5.68g $\pm$ 0.65g)(mean $\pm$ SE) and cascades (7.52g $\pm$ 0.43g)(mean $\pm$ SE) (*p* = `r round(df$p.adj[2],3)`).
+To determine whether or not there is a difference in 2017 mean weight for salamanders found in different channel types (pool, cascade, and side channel), we performed a one-way ANOVA test. The results  F(`r salamander_outputs[1]`, `r salamander_outputs[2]`) = `r round(salamander_outputs[7],2)`, *p* = `r round(salamander_outputs[9],3)`) indicate that there is a significant difference between at least two of the mean weights for salamanders in different channels. A Tukey's HSD post-hoc test was performed to determine which channels had significant differences between 2017 mean weights. The results show that there is a significant difference in only one pairwise comparison: mean 2017 weights between salamanders in side channels (`r round(channel_weights_mean$mean_weight[3], 2)`g $\pm$ `r round(channel_weights_mean$se_weight[3], 2)`g)(mean $\pm$ SE) and pools (`r round(channel_weights_mean$mean_weight[2], 2)`g $\pm$ `r round(channel_weights_mean$se_weight[2], 2)`g)(mean $\pm$ SE) (*p* = `r round(df$p.adj[3],3)`). There was no significant difference in mean weights of salamanders between cascades (`r round(channel_weights_mean$mean_weight[1], 2)`g$\pm$ `r round(channel_weights_mean$se_weight[1], 2)`g)(mean $\pm$ SE) and pools (*p* = `r round(df$p.adj[1],3)`), as well as no significant difference between side channel and cascades (*p* = `r round(df$p.adj[2],3)`).
 
-The actual differences in mean weights between channel types was 1.78 grams between pools and cascades and 1.84 grams between side channels and cascades. These differences were significantly lower than the difference between pools and side channles, which was 3.62 grams (about 50% higher than the others). 
+
+The actual differences in mean weights between channel types was 1.78 grams between pools and cascades and 1.84 grams between side channels and cascades. These differences were significantly lower than the difference between pools and side channles, which was 3.62 grams (about 50% higher than the other mean differences). 
 
 ```{r}
 # Describe any concerns you have about comparing means across the groups 
 ```
 
-Our above tests are parametric tests that include assumptions of normal distribution of the salamander populations, which was done so by using mean weights of salamanders. However, an unpaired non-parametric test may also be appropriate. Non-parametric tests can be used for non-normal distributions, as we saw our salamander data exhibited above through qq tests and histograms. In that case, we would perform a Mann-Whitney U test to rank the weights of the salamanders instead of comparing the means. 
+Our above tests are parametric tests that include assumptions of random samples, normal distribution of the salamander population's weights, and homogeneity of variances.  A levene's test for homogeneity of variances revealed that the variances are equal between groups, however an examination of the sampling distribution through histograms revealed that the salamander population's weights are skewed to the right. In cases of skewed samples, an unpaired non-parametric test may also be appropriate to determine a signficance difference in salamander weights by channel type. Non-parametric tests can be used for non-normal distributions, as we saw in the salamander weights above. In that case, we would perform a Mann-Whitney U test to rank the weights of the salamanders instead of comparing the means. 
 
-**amp can finish up later bc its late, talk about the results of the levene test and anovas being robust to normality assumption and non parametric tests have less statistical power**
 
 ### Summary
 
 - Salamander counts have generally increased in both sections of Mack Creek (clear cut and old-growth forests) since surveys of salamander populations began in 1993 (Figure 3). It is evident that salamanders can adapt to the clear-cutting of forests.
 - There is no significant difference in 2017 salamander counts and weights in clear cut forests compared to old growth forests (Results C & D). 
-- Mean salamander weights were only significantly different in side channels and pools (Figure 4).
+- Mean salamander weights in 2017 were only significantly different in side channels and pools (Figure 4); the mean difference in salamander weights was about half as much as the difference in means between the other two pairwise comparisons. 
 
 
 ### References 
