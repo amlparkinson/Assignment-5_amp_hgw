@@ -283,7 +283,7 @@ ggplot() +
   ggtitle("2017 Salamander Weight in Different Channels\n") +
   theme(plot.title = element_text(hjust=0.5))
               
-# ASK ALLISON - Is it ok to have negative error bar??
+# Limit y-axis to zero so sd bars aren't negative.
 ```
 
 ***Figure 4:** 2017 weights of salamanders in cascade, pool, and side channels of Mack Creek. Mean weights for each channel type are indicated by the black center dot. Standard deviation of weights are indicated by the upper and lower bars. Data: Stanley Gregory, Andrews Forest LTER Sites.*
@@ -315,8 +315,12 @@ salamander_tukey
 salamander_outputs <-unlist(summary(salamander_aov))
 salamander_outputs
 
+# Create a data frame of Tukey to reference p-values through in-line referencing
+
+df <- data.frame(salamander_tukey$channel_type)
+
 ```
-To determine whether or not there is a difference in 2017 mean weight for salamanders found in different channel types (pool, cascade, and side channel), we performed a one-way ANOVA test. The results **(p=...), hannah, do you know how to extract values from an anova? was that in allisons notes?** indicate that there is a significant difference between at least two of the mean weights for salamanders in different channels. A Tukey's HSD post-hoc test was performed to determine which channels had significant differences between 2017 mean weights F(`r salamander_outputs[1]`, `r salamander_outputs[2]`) = `r round(salamander_outputs[7],2)`, *p* = `r round(salamander_outputs[9],3)`). The results show that there is a significant difference in one pairwise comparison: mean weights between salamanders in side channels (5.68g $\pm$ 0.65g)(mean $\pm$ SE) and pools (9.30g $\pm$ 1.56g)(mean $\pm$ SE). There was no significant difference in mean weights of salamanders between pools (9.30g $\pm$ 1.56g)(mean $\pm$ SE) and cascades (7.52g $\pm$ 0.43g)(mean $\pm$ SE), as well as no significant difference between side channel (5.68g $\pm$ 0.65g)(mean $\pm$ SE) and cascades (7.52g $\pm$ 0.43g)(mean $\pm$ SE).
+To determine whether or not there is a difference in 2017 mean weight for salamanders found in different channel types (pool, cascade, and side channel), we performed a one-way ANOVA test. The results  F(`r salamander_outputs[1]`, `r salamander_outputs[2]`) = `r round(salamander_outputs[7],2)`, *p* = `r round(salamander_outputs[9],3)`) indicate that there is a significant difference between at least two of the mean weights for salamanders in different channels. A Tukey's HSD post-hoc test was performed to determine which channels had significant differences between 2017 mean weights. The results show that there is a significant difference in one pairwise comparison: mean weights between salamanders in side channels (5.68g $\pm$ 0.65g)(mean $\pm$ SE) and pools (9.30g $\pm$ 1.56g)(mean $\pm$ SE) (*p* = `r round(df$p.adj[3],3)`). There was no significant difference in mean weights of salamanders between pools (9.30g $\pm$ 1.56g)(mean $\pm$ SE) and cascades (7.52g $\pm$ 0.43g)(mean $\pm$ SE) (*p* = `r round(df$p.adj[1],3)`), as well as no significant difference between side channel (5.68g $\pm$ 0.65g)(mean $\pm$ SE) and cascades (7.52g $\pm$ 0.43g)(mean $\pm$ SE) (*p* = `r round(df$p.adj[2],3)`).
 
 The actual differences in mean weights between channel types was 1.78 grams between pools and cascades and 1.84 grams between side channels and cascades. These differences were significantly lower than the difference between pools and side channles, which was 3.62 grams (about 50% higher than the others). 
 
@@ -331,7 +335,7 @@ Our above tests are parametric tests that include assumptions of normal distribu
 ### Summary
 
 - Salamander counts have generally increased in both sections of Mack Creek (clear cut and old-growth forests) since surveys of salamander populations began in 1993 (Figure 3). It is evident that salamanders can adapt to the clear-cutting of forests.
-- There is no significant difference in 2017 salamander weights in clear cut forests compared to old growth forests. (reference figure or table here). 
+- There is no significant difference in 2017 salamander counts and weights in clear cut forests compared to old growth forests (Results C & D). 
 - Mean salamander weights were only significantly different in side channels and pools (Figure 4).
 
 
